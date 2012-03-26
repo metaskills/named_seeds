@@ -1,4 +1,6 @@
+require 'rails'
 require 'active_record'
 require 'named_seeds/version'
-require 'named_seeds/fixtures'
-
+require 'named_seeds/identity'
+require 'named_seeds/read'
+require 'named_seeds/railtie'

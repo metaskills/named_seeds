@@ -4,17 +4,25 @@ TODO: Write a gem description
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add the named_seeds gem to your Rails' Gemfile in both the development and test group. This is needed as the NamedSeeds gem exposes rake tasks used in both environments.
 
-    gem 'named_seeds'
-
-And then bundle up.
-
-    $ bundle install
+```ruby
+group :development, :test do
+  gem 'named_seeds'
+end
+```
 
 ## Usage
 
 TODO: Write usage instructions here
+
+## Todo
+
+Show examples with these 3 factory libraries.
+
+* https://github.com/thoughtbot/factory_girl
+* https://github.com/paulelliott/fabrication
+* https://github.com/notahat/machinist
 
 ## Contributing
 

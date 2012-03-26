@@ -16,7 +16,6 @@ class BaseTest < NamedSeeds::Spec
     it 'identifies consistently' do
       NamedSeeds.identify(:ruby).must_equal 207281424
       NamedSeeds.identify(:sapphire_2).must_equal 1066363776
-      
     end
     
   end

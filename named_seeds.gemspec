@@ -14,9 +14,9 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]
-  gem.add_runtime_dependency     'activerecord',      '~> 3.0'
+  gem.add_runtime_dependency     'rails',             '~> 3.1'
+  gem.add_runtime_dependency     'database_cleaner'
   gem.add_development_dependency 'sqlite3',           '~> 1.3'
   gem.add_development_dependency 'rake',              '~> 0.9.2'
   gem.add_development_dependency 'minitest',          '~> 2.8.1'
-  gem.add_development_dependency 'database_cleaner'
 end
