@@ -8,13 +8,9 @@ Add this line to your application's Gemfile:
 
     gem 'named_seeds'
 
-And then execute:
+And then bundle up.
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install named_seeds
+    $ bundle install
 
 ## Usage
 
