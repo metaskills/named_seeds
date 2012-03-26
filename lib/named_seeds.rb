@@ -1,5 +1,4 @@
-require "named_seeds/version"
+require 'active_record'
+require 'named_seeds/version'
+require 'named_seeds/fixtures'
 
-module NamedSeeds
-  # Your code goes here...
-end
