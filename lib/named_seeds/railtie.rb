@@ -20,9 +20,11 @@ module NamedSeeds
     end
     
     def load_seed
-      setup_test_environment
-      clean_test_database
-      load_all_seeds
+      if seed_file
+        setup_test_environment
+        clean_test_database
+        load_all_seeds
+      end
     end
     
     
@@ -49,8 +51,11 @@ module NamedSeeds
     def load_all_seeds
       Rails.application.load_seed if config.named_seeds.app_load_seed
       config.named_seeds.engines_with_load_seed.each { |engine| engine.load_seed }
-      seed_file = Rails.application.paths["db/test/seeds"].existent.first
-      load(seed_file) if seed_file
+      load seed_file
+    end
+    
+    def seed_file
+      Rails.application.paths["db/test/seeds"].existent.first
     end
     
   end
