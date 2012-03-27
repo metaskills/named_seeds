@@ -7,8 +7,8 @@ Gem::Specification.new do |gem|
   gem.version       = NamedSeeds::VERSION
   gem.authors       = ["Ken Collins"]
   gem.email         = ["ken@metaskills.net"]
-  gem.description   = %q|Named database seeds and transactions are the key to fast tests!|
   gem.summary       = %q|Replace ActiveRecord::Fixtures With #{your_factory_lib}.|
+  gem.description   = %q|Make you tests fast by augmenting them with transactional fixtures powered by your favorite factory library!|
   gem.homepage      = "http://github.com/metaskills/named_seeds"
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")

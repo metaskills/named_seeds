@@ -1,10 +1,18 @@
 # NamedSeeds
 
-TODO: Write a gem description
+**Make you tests fast by augmenting them with transactional fixtures powered by your favorite factory library!**
+
+We all know that ActiveRecord::Fixtures suck because they are authored in YAML files. But Rails did get something right, transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
+
+The idea is to leverage your tests' existing factories to generate fixtures that will be populated before testing starts and to use a database transaction strategy around each test. In this way you have a populated story that can be accessed via convienient helper methods like `users(:admin)` which inturn yields much faster test runs. Database fixtures, even those seeded by factories, are not a pancea and we highly suggested that you continue to use factories in your tests when it makes sense to do so. For those that think this is mad or have FUD to share, please see my blog articles..
+
+* Inprogress...
+* Inprogress...
+
 
 ## Installation
 
-Add the named_seeds gem to your Rails' Gemfile in both the development and test group. This is needed as the NamedSeeds gem exposes rake tasks used in both environments.
+Add the named_seeds gem to your Rails' Gemfile in both the development and test group as shown below. This is needed as the NamedSeeds gem exposes rake tasks needed in both environments.
 
 ```ruby
 group :development, :test do
@@ -14,9 +22,94 @@ end
 
 ## Usage
 
-TODO: Write usage instructions here
+NamedSeeds requires that you create a `db/test/seeds.rb` file. The contents of this file can be anything you want. We recommend using some factory library like FactoryGirl or Machinist.
+
+```ruby
+require 'factory_girl'
+require "#{Rails.root}/test/factories"
+
+@bob = FactoryGirl.create :user, :id => NamedSeeds.identify(:bob), :email => 'bob@test.com'
+```
+
+Use the `NamedSeeds.identify` method to give a name to the identity used for this record. You will be able to find this record using that name later on.
+
+
+#### Rails
+
+By default, Rails' ActiveSupport::TestCase has set the `use_transactional_fixtures` to true. So all you need to do is declare which tables have NamedSeeds keys.
+
+```ruby
+ENV["RAILS_ENV"] = "test"
+require File.expand_path('../../config/environment', __FILE__)
+require 'rails/test_help'
+
+class ActiveSupport::TestCase
+  named_seeds :users, :posts
+end
+```
+
+Now you can use both the `users` and `posts` helper methods to find any named identity from your seed file.
+
+```ruby
+require 'test_helper'
+class UserTest < ActiveSupport::TestCase
+  setup { @user = users(:bob) }
+  tests "should work" do
+    assert_equal 'bob@test.com', @user.posts
+  end
+end
+```
+
+
+#### RSpec
+
+Coming soon...
+
+#### Cucumber
+
+Coming soon...
+
+
+## Advanced Usage
+
+Review how helper methods may map to custom table names. Like Rails did with #fixture_table_names...
+
+
+## Configurations
+
+NamedSeeds is a `Rails::Railtie` that exposes a few `config` options. So open up the `config/environments/test.rb` and use the `config.named_seeds` options below.
+
+* *app_load_seed* - Load your Rails application's db/seeds.rb file into the test database. This is done before db/test/seeds.rb is loaded. Default is false.
+* *engines_with_load_seed* - Some Rails engines provide a load seed hook. If you want NamedSeed to call the engine's seed method into your tests database, push the engine constant to this array. Any object responding to `load_seed` sould work here too. Default is an empty array.
+
+```ruby
+My::Application.configure do
+  config.named_seeds.app_load_seed = true
+  config.named_seeds.engines_with_load_seed += [GeoData::Engine, OurLookupTables]
+end
+```
+
+NamedSeeds uses DatabaseCleaner to clean the database before seeding it. Use the `config.named_seeds.db_cleaner` options below to configure its behavior. Please see the DatabaseCleaner documentation for full details.
+
+* *orm* - The ORM module to use. Default is `:active_record`.
+* *connection* - The connection name to use. Default is `:test`.
+* *strategy* - Strategy to clean the database with. Default is `:truncation`.
+* *strategy_args* - Args to be passed to the strategy. Default is an empty hash.
+
+```ruby
+My::Application.configure do
+  config.named_seeds.db_cleaner.orm           = :active_record
+  config.named_seeds.db_cleaner.connection    = :test
+  config.named_seeds.db_cleaner.strategy      = :truncation
+  config.named_seeds.db_cleaner.strategy_args = {:except => ['geodata', 'lookuptable']}
+end
+```
+
+
 
 ## Todo
+
+Show Rails implementation using ActiveSupport::TestCase or RSpec.
 
 Show examples with these 3 factory libraries.
 
@@ -24,10 +117,12 @@ Show examples with these 3 factory libraries.
 * https://github.com/paulelliott/fabrication
 * https://github.com/notahat/machinist
 
-## Contributing
+Setup a dummy_application in test.
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+How are we different from:
+
+* https://github.com/mbleigh/seed-fu
+* https://github.com/sevenwire/bootstrapper/
+* https://github.com/franciscotufro/environmental_seeder
+
+Talk about http://railscasts.com/episodes/179-seed-data
