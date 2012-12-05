@@ -1,4 +1,9 @@
 
+### v1.0.3
+
+* Slacker rails dep version. 3.1 or up.
+
+
 ### v1.0.2
 
 * Added a db:development:seed rake task.
