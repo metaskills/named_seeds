@@ -36,9 +36,11 @@ Use the `NamedSeeds.identify` method to give a name to the identity used for thi
 
 ### Rake Files
 
+**Using these tasks manually should not be needed as both are hooked into the proper `test:prepare` and `db:setup` process for you.**
+
 NamedSeeds includes two rake tasks. The `db:test:seeds` is the one that does all the work and is automatically called after Rails' `test:prepare` for you. So running your rake test tasks will create your test database and seed it for you automatically before your tests run.
 
-The other task is `db:development:seed`. This task invokes the normal Rails' `db:seed` task, then loads the db/test/seeds.rb file while still in development mode. This second task provides a way for a developer to populate their development database with the same fixture story used for testing. This makes for easy adoptoin and learning your application as the test story is a 1 to 1 mapping of data in local development.
+The other task is `db:development:seed`. This task invokes the normal Rails' `db:seed` task, then loads the db/test/seeds.rb file while still in development mode. We automatically call this task after `db:setup` for you. This task provides a way for a developer to populate their development database with the same fixture story used for testing. This makes it easy for developers to learn your application as the test story is a 1 to 1 mapping of data in local development.
 
 ```shell
 $ rake db:test:seed          # Run the seed data from db/test/seeds.rb and 

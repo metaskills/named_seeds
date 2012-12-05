@@ -23,4 +23,5 @@ namespace :db do
 
 end
 
+task 'db:setup'     => 'db:development:seed'
 task 'test:prepare' => 'db:test:seed'
