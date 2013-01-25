@@ -1,10 +1,10 @@
 # NamedSeeds
 
-**Make you tests fast by augmenting them with transactional fixtures powered by your favorite factory library!**
+**Make your tests fast by augmenting them with transactional fixtures powered by your favorite factory library!**
 
-We all know that ActiveRecord::Fixtures suck because they are authored in YAML files. But Rails did get something right, transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
+We all know that ActiveRecord::Fixtures suck because they are authored in YAML files. But Rails did get something right with transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop-in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
 
-The idea is to leverage your tests' existing factories to generate fixtures that will be populated before testing starts and to use a database transaction strategy around each test. In this way you have a populated story that can be accessed via convienient helper methods like `users(:admin)` which inturn yields much faster test runs. Database fixtures, even those seeded by factories, are not a pancea and we highly suggested that you continue to use factories in your tests when it makes sense to do so. For those that think this is mad or have FUD to share, please see my blog articles..
+The idea is to leverage your tests' existing factories to generate fixtures that will be populated before testing starts and to use a database transaction strategy around each test. In this way you have a populated story that can be accessed via convienient helper methods like `users(:admin)` which in turn yields much faster test runs. Database fixtures, even those seeded by factories, are not a panacea and we highly suggested that you continue to use factories in your tests when it makes sense to do so. For those that think this is mad or have FUD to share, please see my blog articles:
 
 * Inprogress...
 * Inprogress...
@@ -40,14 +40,14 @@ Use the `NamedSeeds.identify` method to give a name to the identity used for thi
 
 NamedSeeds includes two rake tasks. The `db:test:seeds` is the one that does all the work and is automatically called after Rails' `test:prepare` for you. So running your rake test tasks will create your test database and seed it for you automatically before your tests run. Remember, ActiveRecords `db:test:prepare` is not a proper hook, read [my comment](https://github.com/rspec/rspec-rails/issues/663#issuecomment-11831559) on this rspec issue for more details.
 
-The other task is `db:development:seed`. This task invokes the normal Rails' `db:seed` task, then loads the db/test/seeds.rb file while still in development mode. We automatically call this task after `db:setup` for you. This task provides a way for a developer to populate their development database with the same fixture story used for testing. This makes it easy for developers to learn your application as the test story is a 1 to 1 mapping of data in local development.
+The other task is `db:development:seed`. This task invokes the normal Rails `db:seed` task, then loads the db/test/seeds.rb file while still in development mode. We automatically call this task after `db:setup` for you. This task provides a way for a developer to populate their development database with the same fixture story used for testing. This makes it easy for developers to learn your application as the test story is a 1 to 1 mapping of data in local development.
 
 ```shell
 $ rake db:test:seed          # Run the seed data from db/test/seeds.rb and 
-                             # optional your Rails db/seeds.rb if you have 
+                             # optionally your Rails db/seeds.rb if you have 
                              # configured `app_load_seed` below.
 
-$ rake db:development:seed   # Runs the normal Rails `db:seed` task then the 
+$ rake db:development:seed   # Runs the normal Rails `db:seed` task then 
                              # loads the db/test/seeds.rb file.
 ```
 
@@ -135,7 +135,7 @@ Show examples with these 3 factory libraries.
 * https://github.com/paulelliott/fabrication
 * https://github.com/notahat/machinist
 
-Setup a dummy_application in test.
+Set up a dummy_application in test.
 
 How are we different from:
 
