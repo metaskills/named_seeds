@@ -95,7 +95,8 @@ Review how helper methods may map to custom table names. Like Rails did with #fi
 
 ## Configurations
 
-NamedSeeds is a `Rails::Railtie` that exposes a few `config` options. So open up the `config/environments/development.rb` **(yes in development.rb)** and use the `config.named_seeds` options below.
+NamedSeeds is a `Rails::Railtie` that exposes a few `config` options. So open up the `config/environments/development.rb` **(yes in development.rb)** and use the `config.named_seeds` options below. NOTE: I have found that sometimes I need to add some configurations to `config/environments/test.rb` too. Mainly when using [spring](https://github.com/jonleighton/spring). So adding `config.named_seeds.app_load_seed = true` is what I needed.
+
 
 * *app_load_seed* - Load your Rails application's db/seeds.rb file into the test database. This is done before db/test/seeds.rb is loaded. Default is false.
 * *engines_with_load_seed* - Some Rails engines provide a load seed hook. If you want NamedSeed to call the engine's seed method into your tests database, push the engine constant to this array. Any object responding to `load_seed` sould work here too. Default is an empty array.
