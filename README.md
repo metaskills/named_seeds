@@ -26,7 +26,7 @@ NamedSeeds requires that you create a `db/test/seeds.rb` file. The contents of t
 
 ```ruby
 require 'factory_girl'
-FactoryGirl.find_definitions rescue true
+FactoryGirl.reload
 
 @bob = FactoryGirl.create :user, :id => NamedSeeds.identify(:bob), :email => 'bob@test.com'
 ```
