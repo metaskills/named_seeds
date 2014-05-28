@@ -2,7 +2,7 @@
 
 **Make your tests fast by augmenting them with transactional fixtures powered by your favorite factory library!**
 
-We all know that ActiveRecord::Fixtures suck because they are authored in YAML files. But Rails did get something right with transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop-in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
+We all know that ActiveRecord::Fixtures are hard to maintain and are disconnected from that models that normally input your data. But Rails did get something right with transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop-in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
 
 The idea is to leverage your tests' existing factories to generate fixtures that will be populated before testing starts and to use a database transaction strategy around each test. In this way you have a populated story that can be accessed via convienient helper methods like `users(:admin)` which in turn yields much faster test runs. Database fixtures, even those seeded by factories, are not a panacea and we highly suggested that you continue to use factories in your tests when it makes sense to do so. For those that think this is mad or have FUD to share, please see my blog articles:
 
