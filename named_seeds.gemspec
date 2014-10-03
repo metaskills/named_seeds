@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]
-  gem.add_runtime_dependency     'rails',             '~> 4.1.0.rc1'
+  gem.add_runtime_dependency     'rails', '>= 3.1', '< 4.2'
   gem.add_runtime_dependency     'database_cleaner'
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'rake'
