@@ -1,5 +1,10 @@
 # NamedSeeds
 
+**Almost Ready for Rails 4.2.0.beta2**
+
+* [Various Issues With 4.2.0.beta2 DB Setup/Testing](https://github.com/rails/rails/issues/17170)
+* [The `test:prepare` Task Might Be Useless Now?](https://github.com/rails/rails/issues/17171)
+
 **Make your tests fast by augmenting them with transactional fixtures powered by your favorite factory library!**
 
 We all know that ActiveRecord::Fixtures are hard to maintain and are disconnected from the models that save your data. But Rails did get something right with transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop-in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
