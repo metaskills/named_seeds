@@ -1,4 +1,11 @@
 
+### v1.1.0
+
+* Many changes to support new Rails 4.2 sync test schema strategy.
+  - The `test:prepare` Task Might Be Useless Now? - http://git.io/mu2F2Q
+  - Bring back `db:test:prepare` - http://git.io/VKEwhg
+
+
 ### v1.0.4
 
 * Make `db:development:seed` automatic based on Rails `db:setup` convention.

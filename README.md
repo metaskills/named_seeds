@@ -30,14 +30,7 @@ group :development, :test do
 end
 ```
 
-Next add, `NamedSeeds.prepare` to your test helper after the Rails test help file is required. For example:
-
-```ruby
-ENV["RAILS_ENV"] = "test"
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
-NamedSeeds.prepare
-```
+That's it! The NamedSeeds gem will hook into the Rails test cycle to make sure your factoried fixtures (and any engine seeds) are populated after your test schema is created and before your test suite runs.
 
 ## Usage
 
@@ -55,7 +48,7 @@ Use the `NamedSeeds.identify` method to give a name to the identity used for thi
 
 #### Integration Notes
 
-The NamedSeeds gem will hook into Rails/ActiveRecord's `db:setup` task. This means that new developers can checkout your code and run the normal Rails setup process and see a fully populated development database that has the same seed/fixtures story used by your tests. For example:
+The NamedSeeds gem will hook into ActiveRecord's `db:setup` task. This means that new developers can checkout your code and run the normal Rails setup process and see a fully populated development database that has the same seed/fixtures story used by your tests. For example:
 
 ```
 $ bundle
@@ -72,7 +65,7 @@ $ rake db:reset
 Likewise, if you wanted to reset your test database and pre-populate it with named seeds/fixtures you can run the following:
 
 ```
-$ spring stop && rake db:reset RAILS_ENV=test
+$ spring stop && rake db:test:prepare
 ```
 
 #### Rails

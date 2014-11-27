@@ -10,4 +10,5 @@ namespace :named_seeds do
 
 end
 
-task 'db:setup' => 'named_seeds:setup'
+Rake::Task['db:setup'].enhance { Rake::Task['named_seeds:setup'].invoke }
+Rake::Task['db:test:prepare'].enhance { Rake::Task['named_seeds:prepare'].invoke }
