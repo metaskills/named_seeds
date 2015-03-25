@@ -1,23 +1,24 @@
-# NamedSeeds
 
-**Make your tests fast by augmenting them with transactional fixtures powered by your favorite factory library!**
+<img width="502" height="298" alt="NamedSeeds - When it comes to fast tests... you reap what you sow!" src="https://cloud.githubusercontent.com/assets/2381/6770492/c7093fa6-d097-11e4-9e1f-6f90a857f8d3.png" />
 
-We all know that ActiveRecord::Fixtures are hard to maintain and are disconnected from the models that save your data. But Rails did get something right with transactional tests and easy helper methods to access fixtures by name. NamedSeeds aims to be a drop-in replacement for Rails fixtures or an enhancement to RSpec and Cucumber while using any object generator of your choice!
+<hr>
 
-The idea is to leverage your tests' existing factories to generate fixtures that will be populated before testing starts and to use a database transaction strategy around each test. In this way you have a populated story that can be accessed via convienient helper methods like `users(:admin)` which in turn yields much faster test runs. Database fixtures, even those seeded by factories, are not a panacea and we highly suggested that you continue to use factories in your tests when it makes sense to do so. For those that think this is mad or have FUD to share, please see my blog articles:
+**Make your tests fast by augmenting them with transactional fixtures
+powered by your favorite factory library!**
 
-* Inprogress...
-* Inprogress...
+We all know that ActiveRecord's fixtures are hard to maintain, and more importantly, disconnected from the models that create your data. This disconnect can lead to invalid or incomplete representations of your objects as your application grows. But Rails did get something right. Fixtures combined with transactional tests are a huge performance win while providing [canned references among your team](http://martinfowler.com/bliki/ObjectMother.html) via helper methods that find fixtures using a unique name. The NamedSeeds gem aims to replace YAML fixtures by providing a slim identification layer to be used in conjunction with your factory library of choice. For example, [FactoryGirl](https://github.com/thoughtbot/factory_girl).
 
+The idea is to leverage your tests' existing factories to generate fixtures that will be populated before testing starts and to use a database transaction strategy around each test. In this way you have a curated set of personas that can be accessed via convenient helper methods like `users(:admin)` which in turn yields much faster test runs. **NamedSeeds fixtures also become your seed data for Rails' development environment.** This consistency between development and testing is a huge win for on-boarding new team members. Lastly, database fixtures, even those seeded by factories, are not a panacea and we recommend that you continue to use factories in your tests for edge cases when it makes sense to do so.
 
-## Versions
+NamedSeeds is best when your factories follow two key principals:
 
-The current master branch is for Rails v4.2.0 and up and follows v1.1 major version. Please use our `1-0-stable` branch for Rails v3.1 to v4.1.
+* Leveraging your models for most business logic.
+* Creation of "valid garbage" with no/minimal args while allowing idempotency via explicit args.
 
 
 ## Installation
 
-Add the named_seeds gem to your Rails' Gemfile in both the development and test group as shown below. This is needed as the NamedSeeds gem exposes rake tasks needed in both environments.
+Add the gem to your Rails' Gemfile in both the development and test group as shown below. This is needed since the NamedSeeds gem has integrations in both environments.
 
 ```ruby
 group :development, :test do
@@ -25,109 +26,188 @@ group :development, :test do
 end
 ```
 
-That's it! The NamedSeeds gem will hook into the Rails test cycle to make sure your factoried fixtures (and any engine seeds) are populated after your test schema is created and before your test suite runs.
 
-## Usage
+## Quick Start
 
-NamedSeeds requires that you create a `db/test/seeds.rb` file. The contents of this file can be anything you want. We recommend using a factory library like [FactoryGirl](https://github.com/thoughtbot/factory_girl) or [Machinist](https://github.com/notahat/machinist).
+NamedSeeds only requires that you customize the Rails `db/seeds.rb` file. The contents of this file can be anything you want! We recommend using a factory library like [FactoryGirl](https://github.com/thoughtbot/factory_girl) or [Machinist](https://github.com/notahat/machinist).
 
 ```ruby
 require 'factory_girl'
+include FactoryGirl::Syntax::Methods
 FactoryGirl.find_definitions rescue false
+FactoryGirl.lint
 
-@bob = FactoryGirl.create :user, id: NamedSeeds.identify(:bob), email: 'bob@test.com'
+@bob = create :user, id: NamedSeeds.identify(:bob), email: 'bob@test.com'
 ```
 
-Use the `NamedSeeds.identify` method to give a name to the identity used for this record. You will be able to find this record using that name later on.
-
-
-#### Integration Notes
-
-The NamedSeeds gem will hook into ActiveRecord's `db:setup` task. This means that new developers can checkout your code and run the normal Rails setup process and see a fully populated development database that has the same seed/fixtures story used by your tests. For example:
-
-```
-$ bundle
-$ rake db:create:all
-$ rake db:setup
-```
-
-If you need to force a reload of your development environment's data, just use Rails conventions. For example, the `db:reset` task calls setup, so NamedSeeds will hook in at the right place.
-
-```
-$ rake db:reset
-```
-
-Likewise, if you wanted to reset your test database and pre-populate it with named seeds/fixtures you can run the following:
-
-```
-$ spring stop && rake db:test:prepare
-```
-
-#### Rails
-
-By default, Rails' ActiveSupport::TestCase has set the `use_transactional_fixtures` to true. So all you need to do is declare which tables have NamedSeeds keys.
+In this example we have given our Bob user an explicit primary key using the identify method of NamedSeeds. This ensures we have a handle on Bob in our tests. For this happen, make the following changes to your Rails `test_helper.rb` file.
 
 ```ruby
+ENV["RAILS_ENV"] = "test"
+require File.expand_path('../../config/environment', __FILE__)
+require 'rails/test_help'
+NamedSeeds.load_seed
+
 class ActiveSupport::TestCase
-  named_seeds :users, :posts
+
+  named_seeds :users
+
 end
 ```
 
-Now you can use both the `users` and `posts` helper methods to find any named identity from your seed file.
+Here we have added `NamedSeeds.load_seed` after our requires. This ensures our test database is properly seeded. We have also added a `named_seeds :users` declaration that creates a test helper method that can find any persona with a matching identity. The method name follows ActiveRecord model/table name conventions. So in this case we expect to find a `User` model. An example of what our unit test for Bob might look like with the new `users` fixture helper would be:
 
 ```ruby
 require 'test_helper'
+
 class UserTest < ActiveSupport::TestCase
-  setup { @user = users(:bob) }
+
   tests "should work" do
-    assert_equal 'bob@test.com', @user.posts
+    user = users(:bob)
+    assert_equal 'bob@test.com', user.email
   end
+
 end
 ```
 
-#### RSpec
+This test is very contrived and is only meant to illustrate the `users(:bob)` test helper which closely mimics ActiveRecord's fixture helpers.
 
-Coming soon...
 
-#### Cucumber
+## Detailed Usage
 
-Coming soon...
+#### Development Benefits
 
+NamedSeeds hooks into the `db:setup` process. In this way, the same fixture story seeded in your test environment is the same in development. For example, if you are on-boarding a new developer and bootstrapping their environment.
+
+```shell
+$ bundle
+$ rake db:create:all db:setup
+```
+
+Your local development database will now contain all fixtures created in db/seeds. As you fixtures grow, re-create your development environment with confidence.
+
+
+```shell
+$ bundle
+$ rake db:drop:all db:create:all db:setup
+```
+
+#### The NamedSeeds::DSL
+
+If you do not like typing `NamedSeeds.identify(:persona)` over and over again in your seeds file, you can include the `NamedSeeds::DSL` at the top. This will give you direct scope to the `identify` method which is also succinctly aliased to just `id` if you want.
+
+```ruby
+include NamedSeeds::DSL
+
+id(:ruby)       # => 207281424
+id(:sapphire_2) # => 1066363776
+```
+
+#### UUID Identifiers
+
+By default identities boil down to a consistent integer whose values are less than 2^30. These are great for typical primary or foreign keys. Now that Rails supports UUID keys in both models and ActiveRecord fixtures, so does the NamedSeeds gem. The identity method can use an optional second parameter to denote the SQL type when seeding your database.
+
+```ruby
+id(:ken, :uuid) # => '4f156606-8cb3-509e-a177-956ca0a22015'
+```
+
+So if our `User` model did use a UUID column type, our seed file might look like this.
+
+```ruby
+@bob = create :user, id: NamedSeeds.identify(:bob), email: 'bob@test.com'
+```
+
+#### String Identifier
+
+If your model uses strings for primary keys or what is known as "natural" keys, then NamedSeeds can still work for you. First, create your seed data without the identity helper. For example, below we are seeding US states in a contrived lookup table.
+
+```ruby
+# In db/seeds.rb file.
+create :state, id: 'VA', name: 'Virginia'
+create :state, id: 'WA', name: 'Washington'
+```
+
+Here the primary key of the `State` model is a string column. You have two options to generate test helpers for these objects. Note that none are technically needed since the identities are known and not random integers.
+
+```ruby
+named_seeds :states, identities: {virginia: 'VA', washington: 'WA'}
+states(:virginia) # => #<State id: 'VA'... >
+
+named_seeds :states, identities: :natural
+states('VA')      # => #<State id: 'VA'... >
+
+```
+
+By passing an identities hash to `named_seeds` you can customize the name of the key used in finders. The first line would generate a method that allows you to find states using the longer identities key values. This is great if your natural keys do not necessarily speak to the persona/object under test. If you wanted to use the natural key string values, you can just pass `:natural` to the identities option.
+
+#### Setting Fixture Classes
+
+If your test helper name can not infer the class name, just use the `:class` option when declaring seeds in your test helper.
+
+```ruby
+named_seeds :users, class: Legacy::User
+```
+
+#### Moving From ActiveRecord Fixtures
+
+Unlike ActiveRecord fixtures, NamedSeeds does not support loading fixtures per test case. Since the entire fixture story is loaded before the test suite runs. NamedSeeds is much more akin to `fixtures(:all)` and the `named_seeds` method is more about creating test helper methods to access named fixtures. Lastly, NamedSeeds has no notion of instantiated fixtures.
+
+#### Using DatabaseCleaner
+
+Rails 4 (maybe starting in 4.1) now has a new test database synchronization strategy. No longer is your entire development schema cloned when you run your tests. This saves time when running tests but it also adds a potential gotcha when using db/seeds.rb with the NamedSeeds gem. We recommend using the DatabaseCleaner gem and cleaning your DB at the top of your seed file.
+
+```ruby
+# In your Gemfile.
+group :development, :test do
+  gem 'named_seeds'
+  gem 'database_cleaner'
+end
+
+# Top of db/seeds.rb file.
+require 'database_cleaner'
+DatabaseCleaner.clean_with :truncation
+DatabaseCleaner.clean
+```
 
 
 ## Configurations
 
-NamedSeeds is a `Rails::Railtie` that exposes a few `config` options. So open up the `config/environments/development.rb` **(yes in development.rb)** and use the `config.named_seeds` options below. NOTE: I have found that sometimes I need to add some configurations to `config/environments/test.rb` too.
+#### Other Rails::Engine And Seed Loaders
 
-* *app_load_seed* - Load your Rails application's db/seeds.rb file into the test database. This is done before db/test/seeds.rb is loaded. Default is `true` but may people use this file incorrectly vs standard lookup tables.
-* *engines_with_load_seed* - Some Rails engines provide a load seed hook. If you want NamedSeed to call the engine's seed method into your tests database, push the engine constant to this array. Any object responding to `load_seed` sould work here too. Default is an empty array.
+Rails::Engines are a great way to distribute shared functionality. Rails exposes a hook called `load_seed` that an engine can implement. These are great for seeding tables that an engine's models may need. You can tell NamedSeeds to use any object that responds to `load_seed` and each will be called after `db/seeds.rb` is loaded. For example:
 
 ```ruby
-My::Application.configure do
-  config.named_seeds.app_load_seed = false
-  config.named_seeds.engines_with_load_seed += [GeoData::Engine, OurLookupTables]
+# In config/initializers/named_seeds.rb
+
+if defined?(NamedSeeds)
+  Rails.application.config.named_seeds.engines_with_load_seed = [
+    GeoData::Engine,
+    OurLookupTables
+  ]
+  end
 end
 ```
 
-NamedSeeds relies on ActiveRecord's `ActiveRecord::Migration.maintain_test_schema!` setting. We do not want to get into the business of coupling too much with the internals of Rails and hance assume this is true.
+
+## Versions
+
+The current master branch is for Rails v4.0.0 and up and. Please use our `1-0-stable` branch for Rails v3.x.
 
 
-## Todo
+## Contributing
 
-Show Rails implementation using ActiveSupport::TestCase or RSpec.
+We use the [Appraisal](https://github.com/thoughtbot/appraisal) gem from Thoughtbot to help us test different versions of Rails. The `rake appraisal test` command actually runs our test suite against all Rails versions in our `Appraisal` file. So after cloning the repo, running the following commands.
 
-Show examples with these 3 factory libraries.
+```shell
+$ bundle install
+$ bundle exec appraisal install
+$ bundle exec appraisal rake test
+```
 
-* https://github.com/thoughtbot/factory_girl
-* https://github.com/paulelliott/fabrication
-* https://github.com/notahat/machinist
+If you want to run the tests for a specific Rails version, use one of the appraisal names found in our `Appraisals` file. For example, the following will run our tests suite for Rails 4.1.x.
 
-Set up a dummy_application in test.
+```shell
+$ bundle exec appraisal rails41 rake test
+```
 
-How are we different from:
 
-* https://github.com/mbleigh/seed-fu
-* https://github.com/sevenwire/bootstrapper/
-* https://github.com/franciscotufro/environmental_seeder
-
-Talk about http://railscasts.com/episodes/179-seed-data
