@@ -1,3 +1,14 @@
+
+## Get RSpec Working
+
+https://semaphoreci.com/community/tutorials/getting-started-with-rspec
+
+
+## Prepare for v2
+
+http://chriskottom.com/blog/2014/11/fixing-fixtures/
+
+
 ## Alternative Solutions
 
 There are no absolutes, especially when it comes to software. That said, we think NamedSeeds is the best way to use fixtures. It encourages... (good factoies)
