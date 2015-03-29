@@ -4,6 +4,12 @@
 Always keep a change log. See: http://keepachangelog.com
 
 
+## master
+
+* Added: `custom_seed_file` config. Use this to set a file other than `db/seeds.rb` for loading.
+* Added: `load_app_seed_file` config which defaults to true. Use to disable `db/seeds.rb` when calling `NamedSeeds.load_seed`, typically for test env.
+
+
 ## v2.0.0 - 2015-03-25
 
 * New version tested for Rails v4.0 to v4.2.

@@ -172,20 +172,32 @@ DatabaseCleaner.clean
 
 ## Configurations
 
+All configurations are best done in a `config/initializers/named_seeds.rb` file using a defined check as shown below. All other examples below assume this convention.
+
+```ruby
+if defined?(NamedSeeds)
+  Rails.application.config.named_seeds
+end
+```
+
 #### Other Rails::Engine And Seed Loaders
 
 Rails::Engines are a great way to distribute shared functionality. Rails exposes a hook called `load_seed` that an engine can implement. These are great for seeding tables that an engine's models may need. You can tell NamedSeeds to use any object that responds to `load_seed` and each will be called after `db/seeds.rb` is loaded. For example:
 
 ```ruby
-# In config/initializers/named_seeds.rb
+config.named_seeds.engines_with_load_seed = [
+  GeoData::Engine,
+  OurLookupTables
+]
+```
 
-if defined?(NamedSeeds)
-  Rails.application.config.named_seeds.engines_with_load_seed = [
-    GeoData::Engine,
-    OurLookupTables
-  ]
-  end
-end
+#### Custom Seed File
+
+By default, the NamedSeeds gem relies on Rails `db/seeds.rb` as your seed file. Some people use this file for setting up new production instances while others have code in this file that is something completely different. If this file is not safe for development/test then you should really re-examine your usage of `db/seeds.rb` since Rails loads this file on the `db:setup` task automatically. If you do not want to use this for your development/test seed data, then you can customize the location. However, NamedSeeds does this by running our own `named_seeds:setup` task after the Rails `db:setup` task. So the result is still somewhat the same for development but this does keep `db/seeds.rb` out of the test environment.
+
+```ruby
+config.named_seeds.load_app_seed_file = false
+config.named_seeds.custom_seed_file = 'db/seeds_devtest.rb'
 ```
 
 
