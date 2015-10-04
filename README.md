@@ -3,8 +3,11 @@
 
 <hr>
 
-**Make your tests fast by augmenting them with transactional fixtures
-powered by your favorite factory library!**
+#### Make your tests fast by augmenting them with transactional fixtures
+powered by your favorite factory library!
+
+[![Gem Version](https://badge.fury.io/rb/named_seeds.png)](http://badge.fury.io/rb/named_seeds)
+[![Build Status](https://secure.travis-ci.org/metaskills/named_seeds.png)](http://travis-ci.org/metaskills/named_seeds)
 
 We all know that ActiveRecord's fixtures are hard to maintain, and more importantly, disconnected from the models that create your data. This disconnect can lead to invalid or incomplete representations of your objects as your application grows. But Rails did get something right. Fixtures combined with transactional tests are a huge performance win while providing [canned references among your team](http://martinfowler.com/bliki/ObjectMother.html) via helper methods that find fixtures using a unique name. The NamedSeeds gem aims to replace YAML fixtures by providing a slim identification layer to be used in conjunction with your factory library of choice. For example, [FactoryGirl](https://github.com/thoughtbot/factory_girl).
 
