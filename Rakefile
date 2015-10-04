@@ -9,4 +9,7 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-task :default => [:test]
+task :default do
+  exec 'appraisal update'
+  exec 'appraisal rake test'
+end
