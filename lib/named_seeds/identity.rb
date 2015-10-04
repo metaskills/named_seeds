@@ -59,7 +59,7 @@ module NamedSeeds
     end
 
     def model_primary_key_type
-      type     = model_class.column_types[model_class.primary_key].type
+      type     = model_class.columns_hash[model_class.primary_key].type
       sql_type = model_class.columns_hash[model_class.primary_key].sql_type
       return :uuid if ['uuid', 'guid', 'uniqueidentifier'].include?(sql_type)
       type ? type.to_sym : :id
