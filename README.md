@@ -3,8 +3,7 @@
 
 <hr>
 
-#### Make your tests fast by augmenting them with transactional fixtures
-powered by your favorite factory library!
+#### Make your tests fast by augmenting them with transactional fixtures powered by your favorite factory library!
 
 [![Gem Version](https://badge.fury.io/rb/named_seeds.png)](http://badge.fury.io/rb/named_seeds)
 [![Build Status](https://secure.travis-ci.org/metaskills/named_seeds.png)](http://travis-ci.org/metaskills/named_seeds)
