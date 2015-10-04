@@ -1,7 +1,9 @@
 
-# Change Log
+# Always keep a CHANGELOG. See: http://keepachangelog.com
 
-Always keep a change log. See: http://keepachangelog.com
+## v2.1.0 - 2015-10-04
+
+* Support Rails 5 edge.
 
 
 ## v2.0.1 - 2015-03-29
