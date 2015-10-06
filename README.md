@@ -37,7 +37,6 @@ NamedSeeds only requires that you customize the Rails `db/seeds.rb` file. The co
 require 'factory_girl'
 include FactoryGirl::Syntax::Methods
 FactoryGirl.find_definitions rescue false
-FactoryGirl.lint
 
 @bob = create :user, id: NamedSeeds.identify(:bob), email: 'bob@test.com'
 ```
