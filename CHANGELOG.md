@@ -1,6 +1,11 @@
 
 # Always keep a CHANGELOG. See: http://keepachangelog.com
 
+## v2.2.0 - 2016-12-14
+
+* Allow `named_seeds` to take many names.
+
+
 ## v2.1.0 - 2015-10-04
 
 * Support Rails 5 edge.
