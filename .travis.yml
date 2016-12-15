@@ -1,25 +1,9 @@
 sudo: false
 cache: bundler
 rvm:
-  - 2.0
-  - 2.1
-  - 2.2.3
-gemfile:
-  - gemfiles/rails40.gemfile
-  - gemfiles/rails41.gemfile
-  - gemfiles/rails42.gemfile
-  - gemfiles/rails50.gemfile
+  - 2.2.5
 install:
-  - gem install bundler
-  - bundle --version
   - bundle install
+  - bundle exec appraisal install
 script:
-  - bundle exec rake test
-matrix:
-  exclude:
-    - rvm: 1.9.3
-      gemfile: gemfiles/rails50.gemfile
-    - rvm: 2.0
-      gemfile: gemfiles/rails50.gemfile
-    - rvm: 2.1
-      gemfile: gemfiles/rails50.gemfile
+  - bundle exec appraisal rake test
