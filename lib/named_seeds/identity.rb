@@ -15,7 +15,7 @@ module NamedSeeds
         @@all_cached.clear
       end
 
-      def named(name, options)
+      def named(name, options={})
         @@all_cached[name] ||= new(name, options)
       end
 

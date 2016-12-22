@@ -1,6 +1,11 @@
 
 # Always keep a CHANGELOG. See: http://keepachangelog.com
 
+## v2.2.1 - 2016-12-22
+
+* Fix `Identity.named` to allow options to be optional.
+
+
 ## v2.2.0 - 2016-12-14
 
 * Allow `named_seeds` to take many names.
